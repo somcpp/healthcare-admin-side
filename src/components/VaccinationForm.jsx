@@ -24,18 +24,18 @@ const VaccinationForm = () => {
       fetchPatientData();
       fetchVaccinations();
     }
-  }, [userId]);
+  }, [userId,showForm]);
 
   const fetchPatientData = async () => {
     try {
       // TODO: fetch from ${API_BASE}/api/patients/${userId}
-      // const response = await fetch(`${API_BASE}/api/patients/${userId}`);
-      // const data = await response.json();
-      // setPatient(data);
+      const response = await fetch(`${API_BASE}/api/users/${userId}`);
+      const data = await response.json();
+      setPatient(data);
       
       // Fallback to mock data
-      const mockPatient = mockPatients.find(p => p.id === userId);
-      setPatient(mockPatient);
+    //   const mockPatient = mockPatients.find(p => p.id === userId);
+    //   setPatient(mockPatient);
     } catch (error) {
       console.error('Error fetching patient:', error);
       const mockPatient = mockPatients.find(p => p.id === userId);
@@ -47,13 +47,21 @@ const VaccinationForm = () => {
     try {
       setLoading(true);
       // TODO: fetch from ${API_BASE}/api/vaccinations/${userId}
-      // const response = await fetch(`${API_BASE}/api/vaccinations/${userId}`);
-      // const data = await response.json();
-      // setVaccinations(data);
-      
+      const response = await fetch(`${API_BASE}/api/vaccinations/user/${userId}`);
+      const data = await response.json();
+      console.log("API vaccinations response:", data);
+      if (Array.isArray(data)) {
+      setVaccinations(data);
+    } else {
+      // fallback when API sends { message: "..." }
+      setVaccinations([]);
+    }
+      console.log(vaccinations)
+      console.log(vaccinations.length)
+      setLoading(false)
       // Fallback to mock data
-      const userVaccinations = mockVaccinations.filter(v => v.userId === userId);
-      setVaccinations(userVaccinations);
+    //   const userVaccinations = mockVaccinations.filter(v => v.userId === userId);
+    //   setVaccinations(userVaccinations);
     } catch (error) {
       console.error('Error fetching vaccinations:', error);
       const userVaccinations = mockVaccinations.filter(v => v.userId === userId);
@@ -67,24 +75,25 @@ const VaccinationForm = () => {
     e.preventDefault();
     try {
       if (editingVaccination) {
+        // console.log(editingVaccination)
         // TODO: connect to backend PUT ${API_BASE}/api/vaccinations/${editingVaccination.id}
-        // const response = await fetch(`${API_BASE}/api/vaccinations/${editingVaccination.id}`, {
-        //   method: 'PUT',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(formData)
-        // });
+        const response = await fetch(`${API_BASE}/api/vaccinations/${editingVaccination._id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
         
         // Optimistic update for mock data
-        setVaccinations(prev => prev.map(v => 
-          v.id === editingVaccination.id ? { ...v, ...formData } : v
-        ));
+        // setVaccinations(prev => prev.map(v => 
+        //   v.id === editingVaccination.id ? { ...v, ...formData } : v
+        // ));
       } else {
         // TODO: connect to backend POST ${API_BASE}/api/vaccinations/${userId}
-        // const response = await fetch(`${API_BASE}/api/vaccinations/${userId}`, {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify({ ...formData, userId })
-        // });
+        const response = await fetch(`${API_BASE}/api/vaccinations`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...formData, userId })
+        });
         
         // Optimistic update for mock data
         const newVaccination = {
@@ -119,10 +128,10 @@ const VaccinationForm = () => {
     
     try {
       // TODO: connect to backend DELETE ${API_BASE}/api/vaccinations/${vaccinationId}
-      // const response = await fetch(`${API_BASE}/api/vaccinations/${vaccinationId}`, {
-      //   method: 'DELETE'
-      // });
-      
+      const response = await fetch(`${API_BASE}/api/vaccinations/${vaccinationId}`, {
+        method: 'DELETE'
+      });
+      setShowForm(true);
       // Optimistic update for mock data
       setVaccinations(prev => prev.filter(v => v.id !== vaccinationId));
     } catch (error) {
@@ -273,7 +282,7 @@ const VaccinationForm = () => {
         </div>
         
         <div className="p-6">
-          {vaccinations.length === 0 ? (
+          {vaccinations.length == 0 ? (
             <div className="text-center py-12">
               <Calendar size={48} className="mx-auto text-gray-300 mb-4" />
               <p className="text-gray-500">No vaccinations scheduled</p>

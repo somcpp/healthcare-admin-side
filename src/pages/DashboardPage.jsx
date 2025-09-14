@@ -21,17 +21,17 @@ const DashboardPage = () => {
   const fetchDashboardData = async () => {
     try {
       // TODO: replace with fetch calls to ${API_BASE}/api/dashboard or individual endpoints
-      // const [patientsRes, vaccinationsRes, announcementsRes] = await Promise.all([
-      //   fetch(`${API_BASE}/api/patients`),
-      //   fetch(`${API_BASE}/api/vaccinations`),
-      //   fetch(`${API_BASE}/api/announcements`)
-      // ]);
+      const [patientsRes, vaccinationsRes, announcementsRes] = await Promise.all([
+        fetch(`${API_BASE}/api/users`),
+        fetch(`${API_BASE}/api/vaccinations`),
+        fetch(`${API_BASE}/api/announcements`)
+      ]);
       
       // Fallback to mock data
-      const patients = mockPatients;
-      const vaccinations = mockVaccinations;
-      const announcements = mockAnnouncements;
-
+      const patients = await patientsRes.json();
+      const vaccinations = await vaccinationsRes.json();
+      const announcements = await announcementsRes.json();
+      console.log(patients,vaccinations,announcements)
       // Calculate stats
       setStats({
         totalPatients: patients.length,
@@ -141,9 +141,9 @@ const DashboardPage = () => {
             ) : (
               <div className="space-y-3">
                 {topPendingVaccinations.map((vaccination) => (
-                  <div key={vaccination.id} className="flex items-center justify-between py-2">
+                  <div key={vaccination._id} className="flex items-center justify-between py-2">
                     <div>
-                      <p className="font-medium text-gray-900">{vaccination.patientName}</p>
+                      <p className="font-medium text-gray-900">{vaccination.userId.name}</p>
                       <p className="text-sm text-gray-600">{vaccination.vaccine}</p>
                     </div>
                     <div className="text-right">

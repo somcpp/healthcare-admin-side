@@ -15,12 +15,12 @@ const AnnouncementList = ({ refreshTrigger }) => {
     try {
       setLoading(true);
       // TODO: fetch from ${API_BASE}/api/announcements
-      // const response = await fetch(`${API_BASE}/api/announcements`);
-      // const data = await response.json();
-      // setAnnouncements(data);
+      const response = await fetch(`${API_BASE}/api/announcements`);
+      const data = await response.json();
+      setAnnouncements(data);
       
       // Fallback to mock data
-      setAnnouncements(mockAnnouncements);
+      // setAnnouncements(mockAnnouncements);
     } catch (error) {
       console.error('Error fetching announcements:', error);
       setAnnouncements(mockAnnouncements);

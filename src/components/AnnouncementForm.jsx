@@ -16,11 +16,11 @@ const AnnouncementForm = ({ onAnnouncementAdded }) => {
     e.preventDefault();
     try {
       // TODO: connect to backend POST ${API_BASE}/api/announcements
-      // const response = await fetch(`${API_BASE}/api/announcements`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData)
-      // });
+      const response = await fetch(`${API_BASE}/api/announcements`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
       
       console.log('Creating announcement:', formData);
       

@@ -29,12 +29,12 @@ const PatientList = () => {
     try {
       setLoading(true);
       // TODO: fetch from ${API_BASE}/api/patients
-      // const response = await fetch(`${API_BASE}/api/patients`);
-      // const data = await response.json();
-      // setPatients(data);
+      const response = await fetch(`${API_BASE}/api/users`);
+      const data = await response.json();
+      setPatients(data);
       
       // Fallback to mock data
-      setPatients(mockPatients);
+    //   setPatients(mockPatients);
     } catch (error) {
       console.error('Error fetching patients:', error);
       setPatients(mockPatients);
@@ -129,7 +129,7 @@ const PatientList = () => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleManageVaccinations(patient.id);
+                        handleManageVaccinations(patient._id);
                       }}
                       className="text-green-600 hover:text-green-900 p-1"
                       title="Manage Vaccinations"
@@ -199,7 +199,7 @@ const PatientList = () => {
               <button
                 onClick={() => {
                   setSelectedPatient(null);
-                  handleManageVaccinations(selectedPatient.id);
+                  handleManageVaccinations(selectedPatient._id);
                 }}
                 className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
               >

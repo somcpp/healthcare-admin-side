@@ -62,7 +62,7 @@ const VaccinationCard = ({ vaccination, onEdit, onDelete }) => {
             <Edit2 size={16} />
           </button>
           <button
-            onClick={() => onDelete(vaccination.id)}
+            onClick={() => onDelete(vaccination._id)}
             className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded"
             title="Delete Vaccination"
           >
